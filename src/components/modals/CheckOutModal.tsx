@@ -28,7 +28,6 @@ const CheckoutForm = ({
     (item: Tpost) => item.upVotes > item?.downVotes
   );
   console.log(isUpVotesTrue);
-  // const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
 
@@ -48,7 +47,6 @@ const CheckoutForm = ({
     if (error) {
       toast.error(error.message, { id: toastId, duration: 4000 });
     } else {
-      // send response to the server
       const response = await fetch(
         "http://localhost:5000/api/user/confirm-payment",
         {
@@ -71,14 +69,6 @@ const CheckoutForm = ({
           paymentTime: paymentResult?.data?.created,
         };
         console.log(newUserInfopaymentInfo);
-        // const res: any = "api call "
-
-        // if (res?.error) {
-        //     toast.error(res?.error?.message || res?.error?.data?.message, { id: toastId, duration: 4000 })
-        // } else {
-        //     toast.success(res?.date?.message, { id: toastId, duration: 4000 });
-        //     setIsSuccessModalOpen(true)
-        // }
       } else if (!paymentResult.success) {
         toast.error(paymentResult?.message, { id: toastId, duration: 4000 });
       } else {
@@ -128,7 +118,6 @@ const CheckoutForm = ({
           )}
         </ModalContent>
       </Modal>
-      {/* <SuccessModal id={paymentId} total={bookingInfo?.totalAmount} isSuccessModalOpen={isSuccessModalOpen} setIsSuccessModalOpen={setIsSuccessModalOpen} totalRoom={bookingInfo?.room?.length} totalSlot={slotNumber} /> */}
     </>
   );
 };
