@@ -1,8 +1,3 @@
-import { SVGProps } from "react";
-
-export type IconSvgProps = SVGProps<SVGSVGElement> & {
-  size?: number;
-};
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface IInputs {
   name: string;
@@ -25,6 +20,7 @@ export interface IUser {
   profilePhoto: string;
   createdAt?: string;
   updatedAt?: string;
+  verified?: boolean;
   __v?: number;
 }
 
@@ -37,6 +33,7 @@ export interface Tpost {
   activity: any[];
   upVotes: any;
   downVotes: any;
+  createdAt?: any;
   __v: number;
 }
 

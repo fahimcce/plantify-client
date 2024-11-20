@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { jwtDecode } from "jwt-decode";
 import { TUser } from "../redux/features/auth/authSlice";
 

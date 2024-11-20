@@ -1,53 +1,65 @@
-import "@/src/styles/globals.css";
-import { Metadata, Viewport } from "next";
-import clsx from "clsx";
+import type { Metadata } from "next";
+import { Roboto } from "next/font/google";
+import { Poppins } from "next/font/google";
+import { Inter } from "next/font/google";
+import { Roboto_Slab } from "next/font/google";
 
-import { Providers } from "./providers";
+import "./globals.css";
+import MenuBar from "@/components/shared/navigationMenu/NaviBar";
+import GProvider from "@/providers/Provider";
+import GoTop from "@/components/shared/GoTop";
+import ScrollToTop from "@/components/shared/ScrollToTop";
+import Footer from "@/components/shared/Footer";
+import { Suspense } from "react";
+import LoadingBlur from "@/components/shared/LoadingBlur";
 
-import { siteConfig } from "@/src/config/site";
-import { fontSans } from "@/src/config/fonts";
-import { Navbar } from "@/src/components/navbar";
+const inter = Inter({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--inter",
+});
+const roboto_slab = Roboto_Slab({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--roboto_slab",
+});
+const roboto = Roboto({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--roboto",
+});
+const poppins = Poppins({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--poppins",
+});
 
 export const metadata: Metadata = {
-  title: {
-    default: siteConfig.name,
-    template: `%s - ${siteConfig.name}`,
-  },
-  description: siteConfig.description,
-  icons: {
-    icon: "/favicon.ico",
-  },
-};
-
-export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
-    { media: "(prefers-color-scheme: dark)", color: "black" },
-  ],
+  title: "Plantify",
+  description: "Share your idea and advice about your gardening",
 };
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
-    <html suppressHydrationWarning lang="en">
-      <head />
-      <body
-        className={clsx(
-          " bg-background font-sans antialiased",
-          fontSans.variable
-        )}
-      >
-        <Providers>
-          <div className="relative flex flex-col h-screen">
-            <Navbar />
-            <main className="container mx-auto max-w-7xl px-6 flex-grow">
-              {children}
-            </main>
-          </div>
-        </Providers>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${poppins.className} ${roboto_slab.variable} ${roboto.variable} ${inter.variable} antialiased`}
+    >
+      <body>
+        <GProvider>
+          <MenuBar />
+          <Suspense fallback={<LoadingBlur />}>
+            <div className="pb-[360px]">{children}</div>
+          </Suspense>
+          <ScrollToTop />
+          <GoTop />
+          <Footer />
+        </GProvider>
       </body>
     </html>
   );

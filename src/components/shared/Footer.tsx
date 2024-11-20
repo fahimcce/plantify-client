@@ -14,11 +14,11 @@ const Footer = () => {
           {/* Column 1: Logo & Description */}
           <div className="w-full md:w-1/3 mb-6">
             <h2 className="text-2xl font-bold text-white mb-4 flex items-center">
-              <FaLeaf className="mr-2 text-green-500" /> NextLeaf
+              <FaLeaf className="mr-2 text-green-500" /> Plantify
             </h2>
             <p className="text-gray-400">
               Join the conversation, share your insights, and help others grow.
-              NextLeaf is a platform where your vote matters!
+              Plantify is a platform where your vote matters!
             </p>
           </div>
 
@@ -89,7 +89,7 @@ const Footer = () => {
 
         <div className="mt-8 border-t border-gray-700 pt-6 text-center">
           <p className="text-gray-500">
-            &copy; {new Date().getFullYear()} NextLeaf. Where your opinions
+            &copy; {new Date().getFullYear()} Plantify. Where your opinions
             matter. All rights reserved.
           </p>
         </div>

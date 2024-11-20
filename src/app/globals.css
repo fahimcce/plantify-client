@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.jodit-wysiwyg {
+  min-height: 100px !important;
+}
+
+header {
+  max-width: 100% !important;
+  padding: 0 !important;
+}
+
+/* hide scroll bar */
+/* Hide scrollbar for IE, Edge and Firefox */
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}

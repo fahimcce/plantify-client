@@ -1,27 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 "use client";
-
+import { useGetUserByEmailQuery } from "@/redux/features/auth/auth.api";
 import React from "react";
 import moment from "moment";
-
+import EditUser from "@/components/modals/EditProfileModal";
 import ProfileImage from "./ProfileImage";
 import { Divider, Tooltip } from "@nextui-org/react";
 import UsersPosts from "./UsersPosts";
 import Link from "next/link";
-
+import { useLocalUser } from "@/context/user.Provider";
 import { FaCheck } from "react-icons/fa";
 import { ImNotification } from "react-icons/im";
-
+import { useGetPostByUserIdQuery } from "@/redux/features/post/postApi";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import { Tpost } from "@/types";
+import CheckoutForm from "@/components/modals/CheckOutModal";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { useLocalUser } from "@/src/context/user.Provider";
-import { useGetPostByUserIdQuery } from "@/src/redux/features/post/postApi";
-import { useGetUserByEmailQuery } from "@/src/redux/features/auth/auth.api";
-import { Tpost } from "@/src/types";
-import LoadingSpinner from "../../shared/LoadingSpinner";
-import EditUser from "../../modals/EditProfileModal";
-import CheckoutForm from "../../modals/CheckOutModal";
+import ChangePassword from "@/components/modals/ChangePassword";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_Publishable_Key as string
@@ -48,7 +45,10 @@ const ProfilePage = () => {
             <div className="flex flex-col">
               <div className="">
                 <ProfileImage className="md:size-[250px] size-[150px] object-bottom rounded-full border-2 p-2 shadow-lg" />
-                <EditUser />
+                <div className="mt-2 flex flex-col">
+                  <EditUser />
+                  <ChangePassword />
+                </div>
               </div>
               {/* more info */}
               <div className="p-3 md:p-6">
@@ -102,7 +102,7 @@ const ProfilePage = () => {
                             />
                           }
                         </Elements>
-                        <Tooltip content="Required minimum 1 Up Votes in your post">
+                        <Tooltip content="Required minimum 1 more Up Votes than down Votes in your post">
                           {!isUpVotesTrue && (
                             <span>
                               <ImNotification size={20} />
@@ -111,10 +111,10 @@ const ProfilePage = () => {
                         </Tooltip>
                       </div>
                     )}
-                    <span className="text-sm md:text-lg font-medium mt-3">
-                      Address: {userData?.address}
-                    </span>
                   </div>
+                  <h5 className="text-sm md:text-lg font-medium mt-3">
+                    Address: {userData?.address}
+                  </h5>
                 </div>
               </div>
               <Divider className="mb-3" />

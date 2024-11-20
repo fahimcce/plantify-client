@@ -1,4 +1,4 @@
-import { baseApi } from "../../api/baseApi";
+import { baseApi } from "@/redux/api/baseApi";
 
 const postApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -13,7 +13,7 @@ const postApi = baseApi.injectEndpoints({
       invalidatesTags: ["post"],
     }),
     getAllPost: builder.query({
-      query: (query: { searchTerm: string; category: string }) => {
+      query: (query: { searchTerm?: string; category?: string; limit?: number; sort?: string; premium?: boolean }) => {
         const params = new URLSearchParams();
         if (query.searchTerm) {
           params.append(`searchTerm`, `${query.searchTerm}`);
@@ -21,10 +21,27 @@ const postApi = baseApi.injectEndpoints({
         if (query.category) {
           params.append(`category`, `${query.category}`);
         }
+        if (query.limit) {
+          params.append("limit", String(query.limit));
+        }
+        if (query.sort) {
+          params.append("sort", query.sort);
+        }
+        if (query.premium) {
+          params.append("premium", `${query.premium}`);
+        }
         return {
           url: "/post",
           method: "GET",
           params,
+        };
+      },
+    }),
+    getTotalPostDocument: builder.query({
+      query: () => {
+        return {
+          url: "/post/total-post",
+          method: "GET",
         };
       },
     }),
@@ -55,11 +72,7 @@ const postApi = baseApi.injectEndpoints({
       providesTags: ["post"],
     }),
     handleVotes: builder.mutation({
-      query: (info: {
-        postId: string;
-        userId: string | undefined;
-        votes: boolean;
-      }) => {
+      query: (info: { postId: string; userId: string | undefined; votes: boolean }) => {
         return {
           url: `/post/handle-voting/${info.postId}`,
           method: "PUT",
@@ -69,11 +82,7 @@ const postApi = baseApi.injectEndpoints({
       invalidatesTags: ["post"],
     }),
     handleComment: builder.mutation({
-      query: (info: {
-        postId: string;
-        userId: string | undefined;
-        comment: string;
-      }) => {
+      query: (info: { postId: string; userId: string | undefined; comment: string }) => {
         return {
           url: `/post/handle-comment/${info.postId}`,
           method: "PUT",
@@ -85,12 +94,7 @@ const postApi = baseApi.injectEndpoints({
     updatePost: builder.mutation({
       query: (postInfo: {
         postId: string | undefined;
-        postData?: {
-          title: string | undefined;
-          category: string | undefined;
-          post: string | undefined;
-          userId: string | undefined;
-        };
+        postData?: { title: string | undefined; category: string | undefined; post: string | undefined; userId: string | undefined };
       }) => {
         return {
           url: `/post/update-post/${postInfo.postId}`,
@@ -102,7 +106,6 @@ const postApi = baseApi.injectEndpoints({
     }),
     deletePost: builder.mutation({
       query: (postId: string) => {
-        console.log("api", postId);
         return {
           url: `/post/delete/${postId}`,
           method: "DELETE",
@@ -123,4 +126,5 @@ export const {
   useUpdatePostMutation,
   useDeletePostMutation,
   useGetAllPostQuery,
+  useGetTotalPostDocumentQuery,
 } = postApi;

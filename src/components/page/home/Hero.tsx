@@ -1,49 +1,67 @@
-"use client"
-import { motion } from 'framer-motion';
-import Link from 'next/link';
+"use client";
+import React from "react";
+import { motion } from "framer-motion";
+import Link from "next/link";
+
+// Typing effect animation function
+const typingEffect = (text: string) => {
+  return text.split("").map((char, index) => ({
+    key: index,
+    char,
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    transition: {
+      delay: index * 0.1, // Delay each character appearance
+      duration: 0.1, // Speed of typing
+    },
+  }));
+};
 
 const HeroSection = () => {
-    return (
-        <div className="relative bg-green-100 min-h-screen flex items-center justify-center overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-green-300 to-green-500 opacity-50"></div>
+  const text = "Enter _ Plantify _  Arena"; // The text for typing effect
+  const animatedText = typingEffect(text); // Applying the typing effect to the text
 
-            <motion.div
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1 }}
-                className="relative z-10 text-center px-6"
+  return (
+    <div className="relative bg-gradient-to-r from-green-400 via-teal-500 to-blue-600 text-white overflow-hidden">
+      <div className="max-w-screen-xl mx-auto flex flex-col items-center justify-center h-[80vh] py-20">
+        {/* Typing effect for the headline */}
+        <motion.h1 className="text-5xl md:text-6xl font-extrabold text-center mb-6 drop-shadow-lg">
+          {animatedText.map((item) => (
+            <motion.span
+              key={item.key}
+              initial={item.initial}
+              animate={item.animate}
+              transition={item.transition}
+              className="inline-block"
             >
-                <h1 className="text-5xl font-bold text-green-900">
-                    Welcome to GardenGurus
-                </h1>
-                <p className="mt-4 text-lg text-green-800">
-                    Nurture your garden with expert tips and advice from the community.
-                </p>
-                <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 0.7, delay: 0.5 }}
-                    className="mt-8"
-                >
-                    <Link
-                        href="/post"
-                        className="px-8 py-3 bg-green-600 text-white font-semibold rounded-full shadow-lg hover:bg-green-700 transition-all duration-300"
-                    >
-                        Explore Tips
-                    </Link>
-                </motion.div>
-            </motion.div>
+              {item.char}
+            </motion.span>
+          ))}
+        </motion.h1>
 
-            <motion.img
-                src="banner.jpg" // Add a beautiful plant or garden image here
-                alt="Garden"
-                className="absolute bottom-0 right-0 w-1/2 opacity-80 h-full"
-                initial={{ opacity: 0, x: 100 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1 }}
-            />
-        </div>
-    );
+        <motion.p
+          className="text-lg md:text-xl text-center mb-10 max-w-3xl px-4"
+          initial={{ opacity: 0, x: -100 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1, ease: "easeOut", delay: 0.3 }}
+        >
+          Explore expert gardening tips and guides tailored for every gardener.
+          Whether you are just starting or looking to expand your garden, we
+          have got everything you need to succeed.
+        </motion.p>
+
+        <motion.button
+          className="bg-white text-green-600 font-semibold px-8 py-4 rounded-lg shadow-xl hover:bg-green-200 transition duration-300"
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 0.6, ease: "easeOut", delay: 0.5 }}
+        >
+          <Link href={`/post`}>Explore Now</Link>
+        </motion.button>
+      </div>
+    </div>
+  );
 };
 
 export default HeroSection;

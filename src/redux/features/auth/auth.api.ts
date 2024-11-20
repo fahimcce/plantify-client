@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
-import { baseApi } from "../../api/baseApi";
-
+import { baseApi } from "@/redux/api/baseApi";
 // import Cookies from "js-cookie";
 const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -29,6 +27,15 @@ const authApi = baseApi.injectEndpoints({
       //   return Response;
       // },
     }),
+    getAllUser: builder.query({
+      query: () => {
+        return {
+          url: "/user",
+          method: "GET",
+        };
+      },
+      providesTags: ["user"],
+    }),
     getUserByEmail: builder.query({
       query: (email: string) => {
         return {
@@ -49,7 +56,6 @@ const authApi = baseApi.injectEndpoints({
     }),
     updateUser: builder.mutation({
       query: (updateInfo: any) => {
-        console.log(updateInfo);
         return {
           url: `/auth/update-user/${updateInfo.id}`,
           method: "PUT",
@@ -60,7 +66,6 @@ const authApi = baseApi.injectEndpoints({
     }),
     followUnfolow: builder.mutation({
       query: (info: any) => {
-        console.log("api", info);
         return {
           url: "/user/follow-unfollow",
           method: "PUT",
@@ -68,6 +73,51 @@ const authApi = baseApi.injectEndpoints({
         };
       },
       invalidatesTags: ["user"],
+    }),
+    makePayment: builder.mutation({
+      query: (paymentInfo) => {
+        return {
+          url: "/payment/confirm-payment",
+          method: "POST",
+          body: paymentInfo,
+        };
+      },
+      invalidatesTags: ["payment"],
+    }),
+    changePassword: builder.mutation({
+      query: (Info) => {
+        return {
+          url: "/auth/change-password",
+          method: "POST",
+          body: Info,
+        };
+      },
+    }),
+    deleteUser: builder.mutation({
+      query: (id: string) => {
+        return {
+          url: `/user/delete/${id}`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: ["user"],
+    }),
+    makeUserAdmin: builder.mutation({
+      query: (id: string) => {
+        return {
+          url: `/user/user-admin/${id}`,
+          method: "PATCH",
+        };
+      },
+      invalidatesTags: ["user"],
+    }),
+    getPaymentHistory: builder.query({
+      query: () => {
+        return {
+          url: "/payment/get-payment-history",
+          method: "GET",
+        };
+      },
     }),
   }),
 });
@@ -78,4 +128,10 @@ export const {
   useGetUserByidQuery,
   useUpdateUserMutation,
   useFollowUnfolowMutation,
+  useMakePaymentMutation,
+  useChangePasswordMutation,
+  useGetAllUserQuery,
+  useDeleteUserMutation,
+  useMakeUserAdminMutation,
+  useGetPaymentHistoryQuery,
 } = authApi;

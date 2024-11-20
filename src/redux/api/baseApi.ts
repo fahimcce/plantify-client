@@ -11,8 +11,7 @@ import { RootState } from "../store";
 import { logOut, setUser } from "../features/auth/authSlice";
 // import Cookies from "js-cookie";
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:5000/api",
-  // baseUrl: "https://gardening-tips-server.vercel.app/api",
+  baseUrl: "https://plantify-server.vercel.app/api",
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;
@@ -32,11 +31,13 @@ const BaseQueryWithRefreshToken: BaseQueryFn<
 
   if (result?.error?.status === 401) {
     //     // sending refresh token
-    const res = await fetch("http://localhost:5000/api/auth/refresh-token", {
-      // const res = await fetch("https://gardening-tips-server.vercel.app/api/auth/refresh-token", {
-      method: "POST",
-      credentials: "include",
-    });
+    const res = await fetch(
+      "https://plantify-server.vercel.app/api/auth/refresh-token",
+      {
+        method: "POST",
+        credentials: "include",
+      }
+    );
 
     const data = await res.json();
     // refresh token valid
@@ -61,6 +62,6 @@ export const baseApi = createApi({
   reducerPath: "baseApi",
   //   baseQuery: baseQuery,
   baseQuery: BaseQueryWithRefreshToken,
-  tagTypes: ["user", "post", "category"],
+  tagTypes: ["user", "post", "category", "payment"],
   endpoints: () => ({}),
 });

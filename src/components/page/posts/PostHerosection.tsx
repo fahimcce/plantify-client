@@ -1,66 +1,97 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import React, { useEffect } from "react";
+import { useGetCategoryQuery } from "@/redux/features/category/category.api";
 import { Input, Select, SelectItem } from "@nextui-org/react";
-import React from "react";
 
 const PostHero = ({
   setSearchTerm,
   setCategory,
+  setPremium,
+  srcValue,
+  category,
 }: {
+  category: string;
+  srcValue: string;
   setSearchTerm: any;
   setCategory: any;
+  setPremium: any;
 }) => {
+  const { data, isLoading } = useGetCategoryQuery({});
+  const availableCategories = data?.data;
+
+  useEffect(() => {
+    setPremium(false);
+  }, [srcValue, category]);
+
   return (
-    <section className="relative bg-gradient-to-r from-green-700 via-indigo-600 to-green-700 py-6 px-6 text-white w-full">
-      {/* Particle.js background */}
+    <section className="relative w-full text-gray-800 bg-gradient-to-br from-blue-200 via-white to-indigo-300 py-12">
+      {/* Wave background */}
+      <div
+        className="absolute top-0 left-0 w-full h-full bg-cover bg-no-repeat"
+        style={{ backgroundImage: "url(/wave-pattern.svg)" }}
+      ></div>
 
-      <div className="container mx-auto text-center">
-        <h1 className="text-4xl font-bold mb-2">Explore Our Posts</h1>
-        <p className="text-lg mb-5">
-          Find insightful articles, filter by category, and access premium
-          content.
-        </p>
+      <div className="relative container mx-auto px-6">
+        {/* Card Container */}
+        <div className="bg-white shadow-xl rounded-2xl py-10 px-8 max-w-3xl mx-auto">
+          <h1 className="text-3xl font-bold text-center mb-4">
+            Welcome to the posts
+          </h1>
+          <p className="text-center text-gray-600 mb-6">
+            Search articles, filter by categories, and unlock premium content
+            with ease.
+          </p>
 
-        {/* Search Input */}
-        <div className="flex justify-center items-center mb-6">
-          <Input
-            onChange={(e) => setSearchTerm(e.target.value)}
-            type="text"
-            className="w-full max-w-lg p-3 rounded-lg shadow-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            placeholder="Search posts..."
-          />
-        </div>
+          {/* Search Bar */}
+          <div className="flex justify-center items-center mb-6">
+            <Input
+              type="text"
+              placeholder="Search for posts..."
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full max-w-lg p-3 text-gray-800 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            />
+          </div>
 
-        {/* Filter by Category */}
-        <div className="flex justify-center items-center mb-6">
-          <Select
-            label="Categories"
-            size="sm"
-            placeholder="Select an Category"
-            className="max-w-xs"
-            onChange={(e: any) => console.log(e.target.value)}
-          >
-            <SelectItem key="1" value="all">
-              All Categories
-            </SelectItem>
-            <SelectItem key="2" value="tech">
-              Tech
-            </SelectItem>
-          </Select>
-        </div>
+          {/* Category Selector */}
+          <div className="flex justify-center items-center mb-6">
+            <Select
+              isDisabled={isLoading}
+              label="Choose a Category"
+              size="sm"
+              className="max-w-xs"
+              onChange={(e: any) => setCategory(e.target.value)}
+            >
+              <SelectItem key={""} value="">
+                All Categories
+              </SelectItem>
+              {availableCategories?.map(
+                (cat: { category: string; image: string; _id: string }) => (
+                  <SelectItem key={cat._id} value={cat._id}>
+                    {cat.category}
+                  </SelectItem>
+                )
+              )}
+            </Select>
+          </div>
 
-        {/* Premium Content Button */}
-        <div className="flex justify-center items-center">
-          <button className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 px-6 rounded-lg shadow-lg transition-colors duration-300">
-            Premium Content
-          </button>
+          {/* Premium Access Button */}
+          <div className="flex justify-center items-center">
+            <button
+              onClick={() => setPremium(true)}
+              className="py-3 px-8 font-semibold text-white bg-indigo-500 rounded-lg shadow-md hover:bg-indigo-600 transition-transform duration-300 transform hover:scale-105"
+            >
+              Unlock Premium
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Decorative shapes */}
-      <div className="absolute top-0 left-0 w-32 h-32 bg-yellow-400 rounded-full opacity-50"></div>
-      <div className="absolute bottom-0 right-0 w-32 h-32 bg-yellow-300 rounded-full opacity-50"></div>
+      {/* Decorative Circles */}
+      <div className="absolute top-10 right-10 w-24 h-24 bg-blue-300 rounded-full opacity-50"></div>
+      <div className="absolute bottom-10 left-10 w-36 h-36 bg-indigo-400 rounded-full opacity-40"></div>
     </section>
   );
 };

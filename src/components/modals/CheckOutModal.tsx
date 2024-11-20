@@ -11,7 +11,11 @@ import {
   ModalContent,
   ModalFooter,
 } from "@nextui-org/react";
-import { Tpost } from "@/src/types";
+import { Tpost } from "@/types";
+import { useMakePaymentMutation } from "@/redux/features/auth/auth.api";
+
+import { useLocalUser } from "@/context/user.Provider";
+import Swal from "sweetalert2";
 
 const CheckoutForm = ({
   userInfo,
@@ -23,11 +27,13 @@ const CheckoutForm = ({
   userInfo: { name: string | undefined; email: string | undefined };
 }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [makePayment] = useMakePaymentMutation();
+  const { user } = useLocalUser();
 
   const isUpVotesTrue = post?.some(
     (item: Tpost) => item.upVotes > item?.downVotes
   );
-  console.log(isUpVotesTrue);
+  // const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
 
@@ -48,7 +54,7 @@ const CheckoutForm = ({
       toast.error(error.message, { id: toastId, duration: 4000 });
     } else {
       const response = await fetch(
-        "http://localhost:5000/api/user/confirm-payment",
+        "https://plantify-server.vercel.app/api/user/confirm-payment",
         {
           method: "POST",
           headers: {
@@ -62,13 +68,30 @@ const CheckoutForm = ({
       if (paymentResult.success) {
         toast.success(paymentResult.message, { id: toastId });
 
-        // data for back end stor after payment and make user verified
-        const newUserInfopaymentInfo = {
+        const paymentInfo = {
           ...userInfo,
           transactionId: paymentResult?.data?.id,
           paymentTime: paymentResult?.data?.created,
+          userId: user?._id,
         };
-        console.log(newUserInfopaymentInfo);
+        const res = (await makePayment(paymentInfo)) as any;
+
+        if (res?.error) {
+          toast.error(
+            res?.error?.message ||
+              res?.error?.data?.message ||
+              "Something went wrong",
+            { id: toastId, duration: 4000 }
+          );
+        } else {
+          toast.success(res?.date?.message, { id: toastId, duration: 4000 });
+          Swal.fire({
+            title: "Congratulations Your now verified memeber of Plantify",
+            icon: "success",
+            showCancelButton: true,
+            denyButtonText: `ok`,
+          });
+        }
       } else if (!paymentResult.success) {
         toast.error(paymentResult?.message, { id: toastId, duration: 4000 });
       } else {
@@ -93,6 +116,9 @@ const CheckoutForm = ({
           {(onClose) => (
             <>
               <Card className="p-6 text-center bg-white rounded-lg shadow-lg">
+                <h2 className="text-center md:text-lg my-3 font-semibold font-roboto_slab">
+                  You have to pay $40
+                </h2>
                 <form onSubmit={handleSubmit}>
                   <CardElement />
                   <Button

@@ -18,6 +18,7 @@ export const getCurrenUser = async () => {
       phoneNumber: decodedToken?.phoneNumber,
       role: decodedToken?.role,
       profilePhoto: decodedToken?.profilePhoto,
+      verified: decodedToken?.verified,
     };
   }
   return decodedToken;
